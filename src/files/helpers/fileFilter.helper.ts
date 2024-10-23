@@ -1,6 +1,3 @@
-// Docs for this filter implementation with multer
-// https://github.com/expressjs/multer#filefilter
-
 export const fileFilter = (
   req: Express.Request,
   file: Express.Multer.File,
