@@ -24,7 +24,11 @@ docker-compose up -d
 
 4. Seed the database with initial data, open: `http://localhost:3000/api/seed`
 
-5. Run the application
+5. (optional) Download & save images in `/static/products`
+
+- [seed-products_images.zip](https://drive.google.com/file/d/1lAXj7Hv4rDf3LltuIEEfEMjMEJejVVkg/view?usp=sharing)
+
+6. Run the application
 
 ```bash
 pnpm start:dev
