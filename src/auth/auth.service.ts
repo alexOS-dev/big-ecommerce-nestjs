@@ -1,11 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { PostgresExceptionHandler } from '../common/exceptions/postgres-handler.exception';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    private readonly postgresExceptionHandler: PostgresExceptionHandler,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const user = this.userRepository.create(createUserDto);
+
+      await this.userRepository.save(user);
+      return user;
+    } catch (error) {
+      this.postgresExceptionHandler.handleDBExceptions(error);
+    }
   }
 
   findAll() {
@@ -17,6 +35,7 @@ export class AuthService {
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
+    console.log(updateAuthDto);
     return `This action updates a #${id} auth`;
   }
 
