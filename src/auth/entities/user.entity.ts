@@ -14,7 +14,7 @@ export class User {
   @Column('text', { select: false })
   password: string;
 
-  @Column('bool', { default: true, unique: true })
+  @Column('bool', { default: true })
   isActive: boolean;
 
   @Column('text', { array: true, default: ['user'] })
