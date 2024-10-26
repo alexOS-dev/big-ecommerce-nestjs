@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+
 import { PostgresExceptionHandler } from '../common/exceptions/postgres-handler.exception';
+import { User } from './entities/user.entity';
+import { CreateUserDto, LoginUserDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -33,20 +33,20 @@ export class AuthService {
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async login(loginUserDto: LoginUserDto) {
+    const { password, email } = loginUserDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { email: true, password: true },
+    });
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    console.log(updateAuthDto);
-    return `This action updates a #${id} auth`;
-  }
+    if (!user)
+      throw new UnauthorizedException('Credentials are not valid (email)');
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    if (!bcrypt.compareSync(password, user.password))
+      throw new UnauthorizedException('Credentials are not valid (password)');
+    return user;
+    // TODO: Return JWT
   }
 }
