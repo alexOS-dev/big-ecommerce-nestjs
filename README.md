@@ -22,7 +22,11 @@ cp .env.template .env
 docker-compose up -d
 ```
 
-4. Seed the database with initial data, open: `http://localhost:3000/api/seed`
+4. Seed the database with initial data, open: `http://localhost:3000/api/seed` or:
+
+```bash
+curl http://localhost:3000/api/seed
+```
 
 5. (optional) Download & save images in `/static/products`
 
